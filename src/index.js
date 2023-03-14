@@ -7,6 +7,8 @@ export const getModel = (def) => {
          duration: 0,
          delay: 0,
          repeat: {value: 0, name: 'None'},
+         timing: {value: 'linear', name: 'Linear'},
+         alwaysVisible: false,
          traits:[
             ...def.model.prototype.defaults.traits,
             ...[{
@@ -54,6 +56,23 @@ export const getModel = (def) => {
                      {value: 'Infinite', name: 'Infinite'}
                   ]
                },
+               {
+                  changeProp: 1,
+                  type: "select",
+                  label: "Timing",
+                  name: 'timing',
+                  options:[
+                     {value: 'linear', name: 'Linear'},
+                     {value: 'ease-in', name: 'Ease In'},
+                     {value: 'ease-out', name: 'Ease Out'}
+                  ]
+               },
+               {
+                  type: "checkbox",
+                  label: "Always Visible",
+                  name: "alwaysVisible",
+                  changeProp: 1,
+               }
             ]
           ]
        },
@@ -69,6 +88,12 @@ export const getModel = (def) => {
 
             this.on("change:repeat", this.onAnimationRepeatChange)
             this.onAnimationRepeatChange()
+
+            this.on("change:timing", this.onAnimationTimingFunctionChange)
+            this.onAnimationTimingFunctionChange()
+
+            this.on("change:alwaysVisible", this.onAnimationAlwaysVisibleChange)
+            this.onAnimationAlwaysVisibleChange()
        },
        onAnimationNameChange() {
             this.removeStyle("animation-name");
@@ -85,6 +110,17 @@ export const getModel = (def) => {
       onAnimationRepeatChange() {
             this.removeStyle("animation-iteration-count");
             this.addStyle({ "animation-iteration-count": this.get('repeat') });
+      },
+      onAnimationTimingFunctionChange() {
+            this.removeStyle("animation-timing-function");
+            this.addStyle({ "animation-timing-function": this.get('timing') });
+      },
+      onAnimationAlwaysVisibleChange() {
+         const alwaysVisible = this.get('alwaysVisible')
+         this.removeStyle("opacity");
+         if (alwaysVisible) {
+            this.addStyle({ "opacity":"1 !important" });
+         }
       }
    }
 }

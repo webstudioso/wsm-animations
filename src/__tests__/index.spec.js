@@ -53,6 +53,8 @@ describe("Animations plugin", () => {
                   duration: 0,
                   delay: 0,
                   repeat: {value: 0, name: 'None'},
+                  timing: {value: 'linear', name: 'Linear'},
+                  alwaysVisible: false,
                   "traits": [
                     {
                       "changeProp": 1, 
@@ -95,12 +97,29 @@ describe("Animations plugin", () => {
                        {value: 3, name: 'Three Times'},
                        {value: 'Infinite', name: 'Infinite'}
                     ]
-                  }]},
+                  },                {
+                    changeProp: 1,
+                    type: "select",
+                    label: "Timing",
+                    name: 'timing',
+                    options:[
+                       {value: 'linear', name: 'Linear'},
+                       {value: 'ease-in', name: 'Ease In'},
+                       {value: 'ease-out', name: 'Ease Out'}
+                    ]
+                 }, {
+                    type: "checkbox",
+                    label: "Always Visible",
+                    name: "alwaysVisible",
+                    changeProp: 1,
+                 }]},
                   "init": expect.any(Function),
                   "onAnimationNameChange": expect.any(Function),
                   "onAnimationDurationChange": expect.any(Function),
                   "onAnimationDelayChange": expect.any(Function),
-                  "onAnimationRepeatChange": expect.any(Function)
+                  "onAnimationRepeatChange": expect.any(Function),
+                  "onAnimationTimingFunctionChange": expect.any(Function),
+                  "onAnimationAlwaysVisibleChange":  expect.any(Function),
               }
             }
             Plugin(editor)
@@ -194,6 +213,28 @@ describe("Animations plugin", () => {
           model.onAnimationRepeatChange()
           expect(model.removeStyle).toHaveBeenCalledWith('animation-iteration-count')
           expect(model.addStyle).toHaveBeenCalledWith({ 'animation-iteration-count': '2' })
+      })
+    })
+
+    describe("Animation Visible change", () => {
+
+      it("Is added on plugin init", () => {
+          model.removeStyle = jest.fn()
+          model.addStyle = jest.fn()
+          model.get = jest.fn().mockReturnValue(true)
+          model.onAnimationAlwaysVisibleChange = jest.fn()
+          model.init()
+          expect(model.on).toHaveBeenCalledWith('change:alwaysVisible', expect.anything())
+          expect(model.onAnimationAlwaysVisibleChange).toHaveBeenCalled()
+      })
+
+      it("Changes animation visible property in css", () => {
+          model.removeStyle = jest.fn()
+          model.addStyle = jest.fn()
+          model.get = jest.fn().mockReturnValue(false)
+          model.onAnimationAlwaysVisibleChange()
+          expect(model.removeStyle).toHaveBeenCalledWith('opacity')
+          expect(model.addStyle).not.toHaveBeenCalled()
       })
     })
 })
