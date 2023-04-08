@@ -1,6 +1,6 @@
  # Webstudio Animations Module
 
-This module adds animation properties to all blocks on web apps built with `Webstudio`
+This module adds animation properties to all blocks on web apps built with [Webstudio](https://webstudio.so)
 
  ![Webstudio Module Animations](https://github.com/webstudioso/wsm-animations/actions/workflows/production.yml/badge.svg)
 
